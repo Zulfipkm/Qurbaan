@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "965213440740",
-    "project_id": "entekottayi",
-    "storage_bucket": "entekottayi.firebasestorage.app"
+    "project_number": "360458845718",
+    "project_id": "qirbaan-d8abb",
+    "storage_bucket": "qirbaan-d8abb.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:965213440740:android:cf5c134923382ef8f1faf1",
+        "mobilesdk_app_id": "1:360458845718:android:c0aa14369de90c905fff37",
         "android_client_info": {
-          "package_name": "com.ente.kottayi"
+          "package_name": "com.qurban.livestock"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCi1a09ynM9jnUgMdxPIyDaTuZCoSlQUWQ"
+          "current_key": "AIzaSyDZ7IY3Y65gVkJGIUt_qOsyYqMmiMalZHY"
         }
       ],
       "services": {
