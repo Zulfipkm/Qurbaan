@@ -1,380 +1,403 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA"
-    android:fillViewport="true">
+    android:background="#F1F3F6">
 
+    <!-- മുകളിലെ ഗ്രീൻ ബാർ -->
     <LinearLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#1B5E20"
         android:orientation="vertical"
         android:padding="12dp">
 
-        <!-- ഹെഡർ & ഡെവലപ്പർ ക്രെഡിറ്റ് -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginBottom="12dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Qurban"
-                android:textColor="#1B5E20"
-                android:textSize="26sp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvAuthStatusTop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="App developed by Sulfi Sulaiman"
-                android:textColor="#616161"
-                android:textSize="12sp" />
+                android:background="#FFFFFF"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="Login"
+                android:textColor="#1B5E20"
+                android:textSize="12sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- സെർച്ച് ബാർ (Flipkart Model) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="App developed by Sulfi Sulaiman"
+            android:textColor="#C8E6C9"
+            android:textSize="10sp" />
+
         <EditText
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@android:drawable/edit_text"
+            android:layout_height="40dp"
+            android:background="@android:drawable/dialog_holo_light_frame"
             android:drawableStart="@android:drawable/ic_menu_search"
             android:drawablePadding="8dp"
-            android:hint="മൃഗങ്ങളെയോ സ്ഥലങ്ങളെയോ തിരയുക..."
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:layout_marginBottom="14dp" />
+            android:hint="ആട്, പോത്ത്, കോഴി, മത്സ്യം തിരയുക..."
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textSize="13sp" />
+    </LinearLayout>
 
-        <!-- റൗണ്ട് കാറ്റഗറി ഐക്കണുകൾ (Horizontal Scroll) -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:layout_marginBottom="16dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- എല്ലാം -->
-                <LinearLayout
-                    android:id="@+id/btnCatAll"
-                    android:layout_width="72dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
-                    <TextView
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:background="@drawable/round_category_bg"
-                        android:gravity="center"
-                        android:text="🌿"
-                        android:textSize="24sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="All"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- ആട് -->
-                <LinearLayout
-                    android:id="@+id/btnCatGoat"
-                    android:layout_width="72dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
-                    <TextView
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:background="@drawable/round_category_bg"
-                        android:gravity="center"
-                        android:text="🐐"
-                        android:textSize="24sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="ആട്"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- പോത്ത് -->
-                <LinearLayout
-                    android:id="@+id/btnCatBuffalo"
-                    android:layout_width="72dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
-                    <TextView
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:background="@drawable/round_category_bg"
-                        android:gravity="center"
-                        android:text="🐃"
-                        android:textSize="24sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="പോത്ത്"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- കോഴി -->
-                <LinearLayout
-                    android:id="@+id/btnCatHen"
-                    android:layout_width="72dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
-                    <TextView
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:background="@drawable/round_category_bg"
-                        android:gravity="center"
-                        android:text="🐓"
-                        android:textSize="24sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="കോഴി"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- മത്സ്യം -->
-                <LinearLayout
-                    android:id="@+id/btnCatFish"
-                    android:layout_width="72dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:background="@drawable/round_category_bg"
-                        android:gravity="center"
-                        android:text="🐟"
-                        android:textSize="24sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="മത്സ്യം"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <!-- ഇമെയിൽ ലോഗിൻ കാർഡ് -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="3dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:id="@+id/tvUserStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Login / Register to Sell"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/etAuthEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:hint="Email ID"
-                    android:inputType="textEmailAddress" />
-
-                <EditText
-                    android:id="@+id/etAuthPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:hint="Password"
-                    android:inputType="textPassword" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btnLogin"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#2E7D32"
-                        android:text="Login" />
-
-                    <Button
-                        android:id="@+id/btnRegister"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#1565C0"
-                        android:text="Register" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnLogout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:backgroundTint="#C62828"
-                    android:text="Logout"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- വിൽക്കാനുള്ള ഫോം (ഫോട്ടോ അപ്‌ലോഡ് ഉൾപ്പെടെ) -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="3dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="മൃഗങ്ങളെ വിൽപ്പനയ്ക്ക് ചേർക്കുക"
-                    android:textColor="#1B5E20"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/spinnerCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginBottom="8dp" />
-
-                <EditText
-                    android:id="@+id/etTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:hint="ഇനം / പേര് (ഉദാ: മലബാറി തട്ടൻ ആട്)" />
-
-                <EditText
-                    android:id="@+id/etPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:hint="വില (രൂപ)"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/etWeight"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:hint="ഭാരം (Kg)"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/etPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:hint="ഫോൺ നമ്പർ"
-                    android:inputType="phone" />
-
-                <EditText
-                    android:id="@+id/etLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:hint="സ്ഥലം" />
-
-                <!-- ഫോട്ടോ തിരഞ്ഞെടുക്കൽ -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btnSelectImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="#455A64"
-                        android:text="ഫോട്ടോ എടുക്കുക" />
-
-                    <ImageView
-                        android:id="@+id/ivPreview"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="16dp"
-                        android:scaleType="centerCrop"
-                        android:background="#DDDDDD" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnListNow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#2E7D32"
-                    android:padding="12dp"
-                    android:text="List Now"
-                    android:textColor="#FFFFFF" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- ലഭ്യതയുള്ള മൃഗങ്ങളുടെ ലിസ്റ്റ് -->
-        <TextView
-            android:id="@+id/tvSelectedCategoryTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="ലഭ്യമായ മൃഗങ്ങൾ (All)"
-            android:textColor="#212121"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+    <!-- താഴെയുള്ള നാവിഗേഷൻ ബാർ (വാങ്ങുക / വിൽക്കുക) -->
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/containerListings"
+            android:id="@+id/tabBuy"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTabBuyIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🛍️"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvTabBuyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="വാങ്ങുക (Buy)"
+                android:textColor="#1B5E20"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#E0E0E0" />
+
+        <LinearLayout
+            android:id="@+id/tabSell"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTabSellIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="➕"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvTabSellText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="വിൽക്കുക (Sell)"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 1. വാങ്ങാനുള്ള സ്ക്രീൻ (BUY / BROWSE VIEW) -->
+    <ScrollView
+        android:id="@+id/viewBuy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNav"
+        android:layout_below="@id/topBar"
+        android:fillViewport="true"
+        android:visibility="visible">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
 
-    </LinearLayout>
-</ScrollView>
+            <!-- കാറ്റഗറി റൗണ്ട് ഐക്കണുകൾ -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <LinearLayout
+                        android:id="@+id/btnCatAll"
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/round_category_bg"
+                            android:gravity="center"
+                            android:text="🌿"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="All"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btnCatGoat"
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/round_category_bg"
+                            android:gravity="center"
+                            android:text="🐐"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="ആട്"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btnCatBuffalo"
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/round_category_bg"
+                            android:gravity="center"
+                            android:text="🐃"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="പോത്ത്"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btnCatHen"
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/round_category_bg"
+                            android:gravity="center"
+                            android:text="🐓"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="കോഴി"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btnCatFish"
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/round_category_bg"
+                            android:gravity="center"
+                            android:text="🐟"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="മത്സ്യം"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/tvCategoryLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="ലഭ്യമായവ (All)"
+                android:textColor="#212121"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- പ്രോഡക്റ്റ് കാർഡുകൾ വരുന്ന ഗ്രിഡ് -->
+            <LinearLayout
+                android:id="@+id/layoutGridProducts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="4dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 2. വിൽക്കാനുള്ള സ്ക്രീൻ (SELL VIEW) -->
+    <ScrollView
+        android:id="@+id/viewSell"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNav"
+        android:layout_below="@id/topBar"
+        android:fillViewport="true"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:text="വിൽക്കാൻ വിവരം നൽകുക (Sell Item)"
+                        android:textColor="#1B5E20"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/sellSpinnerCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="10dp" />
+
+                    <EditText
+                        android:id="@+id/sellEtTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint="ഇനം / പേര് (ഉദാ: മലബാറി തട്ടൻ ആട്)" />
+
+                    <EditText
+                        android:id="@+id/sellEtPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint="വില (₹)"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/sellEtLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint="സ്ഥലം / ജില്ല" />
+
+                    <EditText
+                        android:id="@+id/sellEtPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:hint="ഫോൺ നമ്പർ"
+                        android:inputType="phone" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/sellBtnChooseImg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#455A64"
+                            android:text="ഫോട്ടോ തിരഞ്ഞെടുക്കുക" />
+
+                        <ImageView
+                            android:id="@+id/sellIvPreview"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="16dp"
+                            android:background="#EEEEEE"
+                            android:scaleType="centerCrop" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/sellBtnSubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#1B5E20"
+                        android:padding="12dp"
+                        android:text="ലിസ്റ്റ് ചെയ്യുക (POST NOW)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
