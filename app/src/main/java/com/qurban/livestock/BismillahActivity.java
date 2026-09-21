@@ -59,9 +59,7 @@ public class BismillahActivity extends AppCompatActivity {
             }
             if (mediaPlayer != null) {
                 try {
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                    }
+                    if (mediaPlayer.isPlaying()) mediaPlayer.stop();
                     mediaPlayer.release();
                 } catch (Exception ignored) {}
                 mediaPlayer = null;
@@ -75,9 +73,7 @@ public class BismillahActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (mediaPlayer != null) {
-            try {
-                mediaPlayer.release();
-            } catch (Exception ignored) {}
+            try { mediaPlayer.release(); } catch (Exception ignored) {}
             mediaPlayer = null;
         }
     }
