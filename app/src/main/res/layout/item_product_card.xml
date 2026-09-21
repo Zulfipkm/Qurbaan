@@ -18,7 +18,7 @@
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@android:drawable/ic_menu_gallery"
             android:background="#EEEEEE" />
 
         <LinearLayout
