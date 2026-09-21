@@ -1,4 +1,4 @@
-package com.ente.kottayi;
+package com.qurban.livestock;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
