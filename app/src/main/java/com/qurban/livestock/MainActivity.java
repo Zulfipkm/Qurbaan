@@ -3,11 +3,14 @@ package com.qurban.livestock;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -282,7 +286,6 @@ public class MainActivity extends AppCompatActivity {
     private void renderGrid() {
         layoutGridProducts.removeAllViews();
         String query = etSearch.getText().toString().trim().toLowerCase();
-        LayoutInflater inflater = LayoutInflater.from(this);
 
         List<DocumentSnapshot> filtered = new ArrayList<>();
         for (DocumentSnapshot doc : allListings) {
@@ -302,48 +305,107 @@ public class MainActivity extends AppCompatActivity {
             filtered.add(doc);
         }
 
+        // 2 കോളങ്ങളായി ഫ്ലിപ്കാർട്ട് കാർഡുകൾ നിർമ്മിക്കുന്നു
         LinearLayout currentRow = null;
         for (int i = 0; i < filtered.size(); i++) {
             if (i % 2 == 0) {
                 currentRow = new LinearLayout(this);
                 currentRow.setOrientation(LinearLayout.HORIZONTAL);
-                currentRow.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                rowParams.setMargins(0, 0, 0, 16);
+                currentRow.setLayoutParams(rowParams);
                 layoutGridProducts.addView(currentRow);
             }
 
             DocumentSnapshot doc = filtered.get(i);
-            View card = inflater.inflate(R.layout.item_product_grid, currentRow, false);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-            card.setLayoutParams(lp);
-
-            TextView tvTitle = card.findViewById(R.id.tvCardTitle);
-            TextView tvPrice = card.findViewById(R.id.tvCardPrice);
-            TextView tvLoc = card.findViewById(R.id.tvCardLocation);
-            ImageView iv = card.findViewById(R.id.ivProductImage);
-            Button btnCall = card.findViewById(R.id.btnCall);
-
-            tvTitle.setText(doc.getString("title"));
-            tvPrice.setText("₹" + doc.getString("price"));
-            tvLoc.setText("📍 " + doc.getString("location"));
-
-            String img = doc.getString("imageUrl");
-            if (img != null && !img.isEmpty()) {
-                Glide.with(this).load(img).into(iv);
-            }
-
-            final String phone = doc.getString("phone");
-            btnCall.setOnClickListener(v -> {
-                if (phone != null) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
-                    startActivity(intent);
-                }
-            });
-
+            View card = createProductCard(doc);
             if (currentRow != null) {
                 currentRow.addView(card);
             }
         }
     }
-}
+
+    private View createProductCard(DocumentSnapshot doc) {
+        CardView cardView = new CardView(this);
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        cardParams.setMargins(8, 8, 8, 8);
+        cardView.setLayoutParams(cardParams);
+        cardView.setRadius(12f);
+        cardView.setCardElevation(4f);
+        cardView.setCardBackgroundColor(Color.WHITE);
+
+        LinearLayout contentLayout = new LinearLayout(this);
+        contentLayout.setOrientation(LinearLayout.VERTICAL);
+        contentLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        // മൃഗത്തിന്റെ ഫോട്ടോ
+        ImageView imageView = new ImageView(this);
+        LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 280);
+        imageView.setLayoutParams(imgParams);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+
+        String imgUrl = doc.getString("imageUrl");
+        if (imgUrl != null && !imgUrl.isEmpty()) {
+            Glide.with(this).load(imgUrl).into(imageView);
+        }
+        contentLayout.addView(imageView);
+
+        // വിവരങ്ങൾ അടങ്ങിയ ബോക്സ്
+        LinearLayout textContainer = new LinearLayout(this);
+        textContainer.setOrientation(LinearLayout.VERTICAL);
+        textContainer.setPadding(16, 12, 16, 16);
+
+        TextView tvTitle = new TextView(this);
+        tvTitle.setText(doc.getString("title"));
+        tvTitle.setTextColor(Color.parseColor("#212121"));
+        tvTitle.setTextSize(14f);
+        tvTitle.setTypeface(null, Typeface.BOLD);
+        tvTitle.setMaxLines(1);
+        tvTitle.setEllipsize(TextUtils.TruncateAt.END);
+        textContainer.addView(tvTitle);
+
+        TextView tvPrice = new TextView(this);
+        tvPrice.setText("₹" + doc.getString("price"));
+        tvPrice.setTextColor(Color.parseColor("#2E7D32"));
+        tvPrice.setTextSize(16f);
+        tvPrice.setTypeface(null, Typeface.BOLD);
+        tvPrice.setPadding(0, 4, 0, 0);
+        textContainer.addView(tvPrice);
+
+        TextView tvLoc = new TextView(this);
+        tvLoc.setText("📍 " + doc.getString("location"));
+        tvLoc.setTextColor(Color.parseColor("#757575"));
+        tvLoc.setTextSize(11f);
+        tvLoc.setPadding(0, 4, 0, 8);
+        textContainer.addView(tvLoc);
+
+        Button btnCall = new Button(this);
+        btnCall.setText("Call Seller");
+        btnCall.setTextColor(Color.WHITE);
+        btnCall.setTextSize(11f);
+        btnCall.setBackgroundColor(Color.parseColor("#FF9F00"));
+        btnCall.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 85));
+
+        final String phone = doc.getString("phone");
+        btnCall.setOnClickListener(v -> {
+            if (phone != null && !phone.isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                startActivity(intent);
+            }
+        });
+        textContainer.addView(btnCall);
+
+        contentLayout.addView(textContainer);
+        cardView.addView(contentLayout);
+        return cardView;
+    }
+        }
+            
