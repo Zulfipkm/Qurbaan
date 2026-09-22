@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#F1F3F6">
 
-    <!-- മുകളിലെ ഗ്രീൻ ബാർ -->
+    <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
@@ -35,8 +35,8 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:paddingStart="12dp"
-                android:paddingEnd="12dp"
                 android:paddingTop="4dp"
+                android:paddingEnd="12dp"
                 android:paddingBottom="4dp"
                 android:text="Login"
                 android:textColor="#1B5E20"
@@ -65,7 +65,7 @@
             android:textSize="13sp" />
     </LinearLayout>
 
-    <!-- താഴെയുള്ള നാവിഗേഷൻ ബാർ (വാങ്ങുക / വിൽക്കുക) -->
+    <!-- Bottom Navigation Bar (വാങ്ങുക / വിൽക്കുക) -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -84,7 +84,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvTabBuyIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🛍️"
@@ -114,7 +113,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvTabSellIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="➕"
@@ -131,7 +129,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- 1. വാങ്ങാനുള്ള സ്ക്രീൻ (BUY / BROWSE VIEW) -->
+    <!-- BUY VIEW (ഹോം പ്രൊഡക്റ്റ് ഗ്രിഡ്) -->
     <ScrollView
         android:id="@+id/viewBuy"
         android:layout_width="match_parent"
@@ -146,7 +144,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- കാറ്റഗറി റൗണ്ട് ഐക്കണുകൾ -->
+            <!-- Round Categories -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -200,7 +198,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="ആട്"
+                            android:text="Goat"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -221,7 +219,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="പോത്ത്"
+                            android:text="Buffalo"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -242,7 +240,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="കോഴി"
+                            android:text="Hen"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -263,7 +261,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="മത്സ്യം"
+                            android:text="Fish"
                             android:textSize="11sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -274,12 +272,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="ലഭ്യമായവ (All)"
+                android:text="All Livestock"
                 android:textColor="#212121"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- പ്രോഡക്റ്റ് കാർഡുകൾ വരുന്ന ഗ്രിഡ് -->
             <LinearLayout
                 android:id="@+id/layoutGridProducts"
                 android:layout_width="match_parent"
@@ -289,7 +286,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 2. വിൽക്കാനുള്ള സ്ക്രീൻ (SELL VIEW) -->
+    <!-- SELL VIEW (വിൽക്കാനുള്ള ഫോം) -->
     <ScrollView
         android:id="@+id/viewSell"
         android:layout_width="match_parent"
@@ -337,7 +334,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:hint="ഇനം / പേര് (ഉദാ: മലബാറി തട്ടൻ ആട്)" />
+                        android:hint="ഇനം / പേര് (Breed / Title)" />
 
                     <EditText
                         android:id="@+id/sellEtPrice"
@@ -374,7 +371,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:backgroundTint="#455A64"
-                            android:text="ഫോട്ടോ തിരഞ്ഞെടുക്കുക" />
+                            android:text="ഫോട്ടോ എടുക്കുക" />
 
                         <ImageView
                             android:id="@+id/sellIvPreview"
