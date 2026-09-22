@@ -43,14 +43,12 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    // Navigation & Views
     private ScrollView viewBuy, viewSell;
     private LinearLayout tabBuy, tabSell;
     private TextView tvTabBuyText, tvTabSellText, tvAuthStatusTop, tvCategoryLabel;
     private EditText etSearch;
     private LinearLayout layoutGridProducts;
 
-    // Sell Form Views
     private Spinner sellSpinnerCategory;
     private EditText sellEtTitle, sellEtPrice, sellEtLocation, sellEtPhone;
     private Button sellBtnChooseImg, sellBtnSubmit;
@@ -79,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        // Bind Navigation
         viewBuy = findViewById(R.id.viewBuy);
         viewSell = findViewById(R.id.viewSell);
         tabBuy = findViewById(R.id.tabBuy);
@@ -91,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         etSearch = findViewById(R.id.etSearch);
         layoutGridProducts = findViewById(R.id.layoutGridProducts);
 
-        // Bind Sell Form
         sellSpinnerCategory = findViewById(R.id.sellSpinnerCategory);
         sellEtTitle = findViewById(R.id.sellEtTitle);
         sellEtPrice = findViewById(R.id.sellEtPrice);
@@ -101,12 +97,11 @@ public class MainActivity extends AppCompatActivity {
         sellBtnSubmit = findViewById(R.id.sellBtnSubmit);
         sellIvPreview = findViewById(R.id.sellIvPreview);
 
-        String[] categories = {"ആട്", "പോത്ത്", "കോഴി", "മത്സ്യം"};
+        String[] categories = {"Goat", "Buffalo", "Hen", "Fish"};
         sellSpinnerCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
 
         updateAuthStatus();
 
-        // Switch to Buy Tab
         tabBuy.setOnClickListener(v -> {
             viewBuy.setVisibility(View.VISIBLE);
             viewSell.setVisibility(View.GONE);
@@ -114,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             tvTabSellText.setTextColor(0xFF757575);
         });
 
-        // Switch to Sell Tab
         tabSell.setOnClickListener(v -> {
             if (mAuth.getCurrentUser() == null) {
                 Toast.makeText(this, "വിൽക്കുന്നതിനായി ആദ്യം ലോഗിൻ ചെയ്യുക!", Toast.LENGTH_SHORT).show();
@@ -129,12 +123,11 @@ public class MainActivity extends AppCompatActivity {
 
         tvAuthStatusTop.setOnClickListener(v -> showAuthDialog());
 
-        // Category Filter Clicks
         findViewById(R.id.btnCatAll).setOnClickListener(v -> setCategoryFilter("All"));
-        findViewById(R.id.btnCatGoat).setOnClickListener(v -> setCategoryFilter("ആട്"));
-        findViewById(R.id.btnCatBuffalo).setOnClickListener(v -> setCategoryFilter("പോത്ത്"));
-        findViewById(R.id.btnCatHen).setOnClickListener(v -> setCategoryFilter("കോഴി"));
-        findViewById(R.id.btnCatFish).setOnClickListener(v -> setCategoryFilter("മത്സ്യം"));
+        findViewById(R.id.btnCatGoat).setOnClickListener(v -> setCategoryFilter("Goat"));
+        findViewById(R.id.btnCatBuffalo).setOnClickListener(v -> setCategoryFilter("Buffalo"));
+        findViewById(R.id.btnCatHen).setOnClickListener(v -> setCategoryFilter("Hen"));
+        findViewById(R.id.btnCatFish).setOnClickListener(v -> setCategoryFilter("Fish"));
 
         sellBtnChooseImg.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -164,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setCategoryFilter(String category) {
         currentCategoryFilter = category;
-        tvCategoryLabel.setText(category.equals("All") ? "ലഭ്യമായവ (All)" : category + " Listings");
+        tvCategoryLabel.setText(category.equals("All") ? "All Livestock" : category + " Listings");
         renderGrid();
     }
 
@@ -173,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             mAuth.signOut();
             updateAuthStatus();
-            Toast.makeText(this, "ലോഗ് ഔട്ട് ചെയ്തു", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -269,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
             selectedImageUri = null;
 
             Toast.makeText(this, "ലിസ്റ്റിംഗ് വിജയകരമായി ചേർത്തു!", Toast.LENGTH_SHORT).show();
-            // Switch back to Buy Tab to see the item
             tabBuy.performClick();
         }).addOnFailureListener(e -> {
             sellBtnSubmit.setEnabled(true);
