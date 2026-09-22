@@ -6,6 +6,10 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashActivity extends AppCompatActivity {
@@ -22,6 +26,21 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        TextView tvLogoEmoji = findViewById(R.id.tvLogoEmoji);
+
+        if (tvLogoEmoji != null) {
+            ScaleAnimation scaleAnim = new ScaleAnimation(
+                    0.5f, 1.15f,
+                    0.5f, 1.15f,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF, 0.5f
+            );
+            scaleAnim.setDuration(1200);
+            scaleAnim.setRepeatMode(Animation.REVERSE);
+            scaleAnim.setRepeatCount(1);
+            tvLogoEmoji.startAnimation(scaleAnim);
+        }
+
         playGoatSound();
 
         timeoutRunnable = this::navigateToBismillah;
@@ -32,10 +51,10 @@ public class SplashActivity extends AppCompatActivity {
         try {
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioAttributes(
-                new AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                    .build()
+                    new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                            .build()
             );
 
             mediaPlayer.setDataSource(GOAT_SOUND_URL);
@@ -59,12 +78,15 @@ public class SplashActivity extends AppCompatActivity {
             }
             if (mediaPlayer != null) {
                 try {
-                    if (mediaPlayer.isPlaying()) mediaPlayer.stop();
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
                     mediaPlayer.release();
                 } catch (Exception ignored) {}
                 mediaPlayer = null;
             }
             startActivity(new Intent(SplashActivity.this, BismillahActivity.class));
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
         }
     }
@@ -73,7 +95,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (mediaPlayer != null) {
-            try { mediaPlayer.release(); } catch (Exception ignored) {}
+            try {
+                mediaPlayer.release();
+            } catch (Exception ignored) {}
             mediaPlayer = null;
         }
     }
