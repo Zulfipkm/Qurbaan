@@ -3,16 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F3F6">
+    android:background="#F1F2F4">
 
-    <!-- Top Bar -->
+    <!-- Flipkart Brand Blue Top Header -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1B5E20"
+        android:background="#2874F0"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,59 +23,81 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Qurban"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Qurban"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Explore Plus ✦"
+                    android:textColor="#FFE500"
+                    android:textSize="11sp"
+                    android:textStyle="bold|italic" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvAuthStatusTop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
-                android:paddingStart="12dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="4dp"
+                android:paddingStart="14dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="5dp"
                 android:text="Login"
-                android:textColor="#1B5E20"
+                android:textColor="#2874F0"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="App developed by Sulfi Sulaiman"
-            android:textColor="#C8E6C9"
-            android:textSize="10sp" />
-
-        <EditText
-            android:id="@+id/etSearch"
+        <!-- Flipkart Style White Search Bar -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@android:drawable/dialog_holo_light_frame"
-            android:drawableStart="@android:drawable/ic_menu_search"
-            android:drawablePadding="8dp"
-            android:hint="ആട്, പോത്ത്, കോഴി, മത്സ്യം തിരയുക..."
+            android:layout_marginTop="8dp"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
             android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:textSize="13sp" />
+            android:paddingEnd="10dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_search" />
+
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="Search for Goats, Buffalo, Hen, Fish..."
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textColor="#212121"
+                android:textColorHint="#878787"
+                android:textSize="13sp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Bottom Navigation Bar (വാങ്ങുക / വിൽക്കുക) -->
+    <!-- Flipkart Bottom Navigation Bar -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="54dp"
         android:layout_alignParentBottom="true"
         android:background="#FFFFFF"
-        android:elevation="8dp"
+        android:elevation="10dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -86,23 +111,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🛍️"
-                android:textSize="18sp" />
+                android:text="🏠"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvTabBuyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="വാങ്ങുക (Buy)"
-                android:textColor="#1B5E20"
-                android:textSize="12sp"
+                android:text="Home"
+                android:textColor="#2874F0"
+                android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#E0E0E0" />
 
         <LinearLayout
             android:id="@+id/tabSell"
@@ -116,20 +136,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="➕"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvTabSellText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="വിൽക്കുക (Sell)"
-                android:textColor="#757575"
-                android:textSize="12sp"
+                android:text="Sell Item"
+                android:textColor="#717478"
+                android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
-    <!-- BUY VIEW (ഹോം പ്രൊഡക്റ്റ് ഗ്രിഡ്) -->
+    <!-- BUY / BROWSE VIEW -->
     <ScrollView
         android:id="@+id/viewBuy"
         android:layout_width="match_parent"
@@ -144,139 +164,205 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Round Categories -->
+            <!-- Flipkart Round Category Strip -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp">
 
                     <LinearLayout
                         android:id="@+id/btnCatAll"
-                        android:layout_width="65dp"
+                        android:layout_width="68dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <TextView
-                            android:layout_width="46dp"
-                            android:layout_height="46dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/round_category_bg"
                             android:gravity="center"
-                            android:text="🌿"
+                            android:text="⚡"
                             android:textSize="20sp" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="All"
-                            android:textSize="11sp" />
+                            android:layout_marginTop="4dp"
+                            android:text="All Items"
+                            android:textColor="#212121"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/btnCatGoat"
-                        android:layout_width="65dp"
+                        android:layout_width="68dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <TextView
-                            android:layout_width="46dp"
-                            android:layout_height="46dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/round_category_bg"
                             android:gravity="center"
                             android:text="🐐"
                             android:textSize="20sp" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Goat"
-                            android:textSize="11sp" />
+                            android:layout_marginTop="4dp"
+                            android:text="Goats"
+                            android:textColor="#212121"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/btnCatBuffalo"
-                        android:layout_width="65dp"
+                        android:layout_width="68dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <TextView
-                            android:layout_width="46dp"
-                            android:layout_height="46dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/round_category_bg"
                             android:gravity="center"
                             android:text="🐃"
                             android:textSize="20sp" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
+                            android:layout_marginTop="4dp"
                             android:text="Buffalo"
-                            android:textSize="11sp" />
+                            android:textColor="#212121"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/btnCatHen"
-                        android:layout_width="65dp"
+                        android:layout_width="68dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <TextView
-                            android:layout_width="46dp"
-                            android:layout_height="46dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/round_category_bg"
                             android:gravity="center"
                             android:text="🐓"
                             android:textSize="20sp" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Hen"
-                            android:textSize="11sp" />
+                            android:layout_marginTop="4dp"
+                            android:text="Hen / Birds"
+                            android:textColor="#212121"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/btnCatFish"
-                        android:layout_width="65dp"
+                        android:layout_width="68dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
+
                         <TextView
-                            android:layout_width="46dp"
-                            android:layout_height="46dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/round_category_bg"
                             android:gravity="center"
                             android:text="🐟"
                             android:textSize="20sp" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
+                            android:layout_marginTop="4dp"
                             android:text="Fish"
-                            android:textSize="11sp" />
+                            android:textColor="#212121"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
             </HorizontalScrollView>
+
+            <!-- Flipkart Style Banner -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                app:cardBackgroundColor="#E3F2FD"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🔥 Big Livestock Festival\nDirect from Local Farmers • 0% Brokerage"
+                        android:textColor="#1976D2"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#2874F0"
+                        android:paddingStart="10dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="6dp"
+                        android:text="VERIFIED"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/tvCategoryLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="All Livestock"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp"
+                android:text="Suggested For You"
                 android:textColor="#212121"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
+            <!-- Flipkart 2-Column Product Grid -->
             <LinearLayout
                 android:id="@+id/layoutGridProducts"
                 android:layout_width="match_parent"
@@ -286,7 +372,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- SELL VIEW (വിൽക്കാനുള്ള ഫോം) -->
+    <!-- SELL VIEW -->
     <ScrollView
         android:id="@+id/viewSell"
         android:layout_width="match_parent"
@@ -294,7 +380,7 @@
         android:layout_above="@id/bottomNav"
         android:layout_below="@id/topBar"
         android:fillViewport="true"
-        android:padding="16dp"
+        android:padding="12dp"
         android:visibility="gone">
 
         <LinearLayout
@@ -305,8 +391,9 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="3dp">
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -317,47 +404,62 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:text="വിൽക്കാൻ വിവരം നൽകുക (Sell Item)"
-                        android:textColor="#1B5E20"
+                        android:layout_marginBottom="14dp"
+                        android:text="Post an Ad on Qurban"
+                        android:textColor="#2874F0"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select Category"
+                        android:textColor="#717478"
+                        android:textSize="12sp" />
 
                     <Spinner
                         android:id="@+id/sellSpinnerCategory"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginBottom="10dp" />
+                        android:layout_marginBottom="12dp" />
 
                     <EditText
                         android:id="@+id/sellEtTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:hint="ഇനം / പേര് (Breed / Title)" />
+                        android:layout_marginBottom="12dp"
+                        android:hint="Item Name (e.g. Boer Goat, Malabari)"
+                        android:textColor="#212121"
+                        android:textColorHint="#9E9E9E" />
 
                     <EditText
                         android:id="@+id/sellEtPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:hint="വില (₹)"
-                        android:inputType="number" />
+                        android:layout_marginBottom="12dp"
+                        android:hint="Price (₹)"
+                        android:inputType="number"
+                        android:textColor="#212121"
+                        android:textColorHint="#9E9E9E" />
 
                     <EditText
                         android:id="@+id/sellEtLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:hint="സ്ഥലം / ജില്ല" />
+                        android:layout_marginBottom="12dp"
+                        android:hint="Location / District"
+                        android:textColor="#212121"
+                        android:textColorHint="#9E9E9E" />
 
                     <EditText
                         android:id="@+id/sellEtPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:hint="ഫോൺ നമ്പർ"
-                        android:inputType="phone" />
+                        android:hint="WhatsApp / Phone Number"
+                        android:inputType="phone"
+                        android:textColor="#212121"
+                        android:textColorHint="#9E9E9E" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -370,31 +472,8 @@
                             android:id="@+id/sellBtnChooseImg"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="#455A64"
-                            android:text="ഫോട്ടോ എടുക്കുക" />
+                            android:backgroundTint="#2874F0"
+                            android:text="Add Photo"
+                            android:textColor="#FFFFFF" />
 
-                        <ImageView
-                            android:id="@+id/sellIvPreview"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="16dp"
-                            android:background="#EEEEEE"
-                            android:scaleType="centerCrop" />
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/sellBtnSubmit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="#1B5E20"
-                        android:padding="12dp"
-                        android:text="ലിസ്റ്റ് ചെയ്യുക (POST NOW)"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-    </ScrollView>
-
-</RelativeLayout>
+                        <ImageVi
