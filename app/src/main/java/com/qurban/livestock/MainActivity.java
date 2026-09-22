@@ -1,6 +1,7 @@
 package com.qurban.livestock;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,15 +43,18 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    private EditText etAuthEmail, etAuthPassword, etSearch;
-    private Button btnLogin, btnRegister, btnLogout;
-    private TextView tvUserStatus, tvSelectedCategoryTitle;
+    // Navigation & Views
+    private ScrollView viewBuy, viewSell;
+    private LinearLayout tabBuy, tabSell;
+    private TextView tvTabBuyText, tvTabSellText, tvAuthStatusTop, tvCategoryLabel;
+    private EditText etSearch;
+    private LinearLayout layoutGridProducts;
 
-    private Spinner spinnerCategory;
-    private EditText etTitle, etPrice, etWeight, etPhone, etLocation;
-    private Button btnSelectImage, btnListNow;
-    private ImageView ivPreview;
-    private LinearLayout containerListings;
+    // Sell Form Views
+    private Spinner sellSpinnerCategory;
+    private EditText sellEtTitle, sellEtPrice, sellEtLocation, sellEtPhone;
+    private Button sellBtnChooseImg, sellBtnSubmit;
+    private ImageView sellIvPreview;
 
     private Uri selectedImageUri = null;
     private String currentCategoryFilter = "All";
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     selectedImageUri = result.getData().getData();
-                    ivPreview.setImageURI(selectedImageUri);
+                    sellIvPreview.setImageURI(selectedImageUri);
                 }
             }
     );
@@ -74,240 +79,279 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        // UI Views
-        etAuthEmail = findViewById(R.id.etAuthEmail);
-        etAuthPassword = findViewById(R.id.etAuthPassword);
-        btnLogin = findViewById(R.id.btnLogin);
-        btnRegister = findViewById(R.id.btnRegister);
-        btnLogout = findViewById(R.id.btnLogout);
-        tvUserStatus = findViewById(R.id.tvUserStatus);
+        // Bind Navigation
+        viewBuy = findViewById(R.id.viewBuy);
+        viewSell = findViewById(R.id.viewSell);
+        tabBuy = findViewById(R.id.tabBuy);
+        tabSell = findViewById(R.id.tabSell);
+        tvTabBuyText = findViewById(R.id.tvTabBuyText);
+        tvTabSellText = findViewById(R.id.tvTabSellText);
+        tvAuthStatusTop = findViewById(R.id.tvAuthStatusTop);
+        tvCategoryLabel = findViewById(R.id.tvCategoryLabel);
         etSearch = findViewById(R.id.etSearch);
-        tvSelectedCategoryTitle = findViewById(R.id.tvSelectedCategoryTitle);
+        layoutGridProducts = findViewById(R.id.layoutGridProducts);
 
-        spinnerCategory = findViewById(R.id.spinnerCategory);
-        etTitle = findViewById(R.id.etTitle);
-        etPrice = findViewById(R.id.etPrice);
-        etWeight = findViewById(R.id.etWeight);
-        etPhone = findViewById(R.id.etPhone);
-        etLocation = findViewById(R.id.etLocation);
-        btnSelectImage = findViewById(R.id.btnSelectImage);
-        btnListNow = findViewById(R.id.btnListNow);
-        ivPreview = findViewById(R.id.ivPreview);
-        containerListings = findViewById(R.id.containerListings);
+        // Bind Sell Form
+        sellSpinnerCategory = findViewById(R.id.sellSpinnerCategory);
+        sellEtTitle = findViewById(R.id.sellEtTitle);
+        sellEtPrice = findViewById(R.id.sellEtPrice);
+        sellEtLocation = findViewById(R.id.sellEtLocation);
+        sellEtPhone = findViewById(R.id.sellEtPhone);
+        sellBtnChooseImg = findViewById(R.id.sellBtnChooseImg);
+        sellBtnSubmit = findViewById(R.id.sellBtnSubmit);
+        sellIvPreview = findViewById(R.id.sellIvPreview);
 
-        // Spinner Setup
         String[] categories = {"ആട്", "പോത്ത്", "കോഴി", "മത്സ്യം"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories);
-        spinnerCategory.setAdapter(adapter);
+        sellSpinnerCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
 
-        updateAuthUI(mAuth.getCurrentUser());
+        updateAuthStatus();
 
-        // Button Listeners
-        btnRegister.setOnClickListener(v -> registerUser());
-        btnLogin.setOnClickListener(v -> loginUser());
-        btnLogout.setOnClickListener(v -> {
-            mAuth.signOut();
-            updateAuthUI(null);
+        // Switch to Buy Tab
+        tabBuy.setOnClickListener(v -> {
+            viewBuy.setVisibility(View.VISIBLE);
+            viewSell.setVisibility(View.GONE);
+            tvTabBuyText.setTextColor(0xFF1B5E20);
+            tvTabSellText.setTextColor(0xFF757575);
         });
 
-        btnSelectImage.setOnClickListener(v -> {
+        // Switch to Sell Tab
+        tabSell.setOnClickListener(v -> {
+            if (mAuth.getCurrentUser() == null) {
+                Toast.makeText(this, "വിൽക്കുന്നതിനായി ആദ്യം ലോഗിൻ ചെയ്യുക!", Toast.LENGTH_SHORT).show();
+                showAuthDialog();
+                return;
+            }
+            viewBuy.setVisibility(View.GONE);
+            viewSell.setVisibility(View.VISIBLE);
+            tvTabSellText.setTextColor(0xFF1B5E20);
+            tvTabBuyText.setTextColor(0xFF757575);
+        });
+
+        tvAuthStatusTop.setOnClickListener(v -> showAuthDialog());
+
+        // Category Filter Clicks
+        findViewById(R.id.btnCatAll).setOnClickListener(v -> setCategoryFilter("All"));
+        findViewById(R.id.btnCatGoat).setOnClickListener(v -> setCategoryFilter("ആട്"));
+        findViewById(R.id.btnCatBuffalo).setOnClickListener(v -> setCategoryFilter("പോത്ത്"));
+        findViewById(R.id.btnCatHen).setOnClickListener(v -> setCategoryFilter("കോഴി"));
+        findViewById(R.id.btnCatFish).setOnClickListener(v -> setCategoryFilter("മത്സ്യം"));
+
+        sellBtnChooseImg.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
             imagePickerLauncher.launch(intent);
         });
 
-        btnListNow.setOnClickListener(v -> uploadImageAndSaveListing());
+        sellBtnSubmit.setOnClickListener(v -> postNewListing());
 
-        // Round Icons Filters
-        findViewById(R.id.btnCatAll).setOnClickListener(v -> filterCategory("All"));
-        findViewById(R.id.btnCatGoat).setOnClickListener(v -> filterCategory("ആട്"));
-        findViewById(R.id.btnCatBuffalo).setOnClickListener(v -> filterCategory("പോത്ത്"));
-        findViewById(R.id.btnCatHen).setOnClickListener(v -> filterCategory("കോഴി"));
-        findViewById(R.id.btnCatFish).setOnClickListener(v -> filterCategory("മത്സ്യം"));
-
-        // Search Text Watcher
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                renderFilteredListings();
-            }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { renderGrid(); }
             @Override public void afterTextChanged(Editable s) {}
         });
 
         listenForListings();
     }
 
-    private void filterCategory(String category) {
-        currentCategoryFilter = category;
-        tvSelectedCategoryTitle.setText("ലഭ്യമായ മൃഗങ്ങൾ (" + category + ")");
-        renderFilteredListings();
-    }
-
-    private void updateAuthUI(FirebaseUser user) {
+    private void updateAuthStatus() {
+        FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            tvUserStatus.setText("ലോഗിൻ ചെയ്തിരിക്കുന്നു: " + user.getEmail());
-            etAuthEmail.setVisibility(View.GONE);
-            etAuthPassword.setVisibility(View.GONE);
-            btnLogin.setVisibility(View.GONE);
-            btnRegister.setVisibility(View.GONE);
-            btnLogout.setVisibility(View.VISIBLE);
+            tvAuthStatusTop.setText("Logout");
         } else {
-            tvUserStatus.setText("Login / Register to Sell");
-            etAuthEmail.setVisibility(View.VISIBLE);
-            etAuthPassword.setVisibility(View.VISIBLE);
-            btnLogin.setVisibility(View.VISIBLE);
-            btnRegister.setVisibility(View.VISIBLE);
-            btnLogout.setVisibility(View.GONE);
+            tvAuthStatusTop.setText("Login");
         }
     }
 
-    private void registerUser() {
-        String email = etAuthEmail.getText().toString().trim();
-        String pass = etAuthPassword.getText().toString().trim();
-        if (email.isEmpty() || pass.length() < 6) {
-            Toast.makeText(this, "സാധുവായ ഇമെയിലും കുറഞ്ഞത് 6 അക്ഷരമുള്ള പാസ്‌വേഡും നൽകുക", Toast.LENGTH_SHORT).show();
+    private void setCategoryFilter(String category) {
+        currentCategoryFilter = category;
+        tvCategoryLabel.setText(category.equals("All") ? "ലഭ്യമായവ (All)" : category + " Listings");
+        renderGrid();
+    }
+
+    private void showAuthDialog() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            mAuth.signOut();
+            updateAuthStatus();
+            Toast.makeText(this, "ലോഗ് ഔട്ട് ചെയ്തു", Toast.LENGTH_SHORT).show();
             return;
         }
-        mAuth.createUserWithEmailAndPassword(email, pass)
-                .addOnSuccessListener(res -> updateAuthUI(res.getUser()))
-                .addOnFailureListener(e -> Toast.makeText(this, "പരാജയം: " + e.getMessage(), Toast.LENGTH_LONG).show());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText etEmail = new EditText(this);
+        etEmail.setHint("Email ID");
+        final EditText etPass = new EditText(this);
+        etPass.setHint("Password");
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(40, 20, 40, 20);
+        layout.addView(etEmail);
+        layout.addView(etPass);
+
+        builder.setTitle("Login / Register").setView(layout)
+                .setPositiveButton("Login", (dialog, which) -> {
+                    String em = etEmail.getText().toString().trim();
+                    String pw = etPass.getText().toString().trim();
+                    if (!em.isEmpty() && !pw.isEmpty()) {
+                        mAuth.signInWithEmailAndPassword(em, pw)
+                                .addOnSuccessListener(r -> updateAuthStatus())
+                                .addOnFailureListener(e -> Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                    }
+                })
+                .setNegativeButton("Register", (dialog, which) -> {
+                    String em = etEmail.getText().toString().trim();
+                    String pw = etPass.getText().toString().trim();
+                    if (!em.isEmpty() && pw.length() >= 6) {
+                        mAuth.createUserWithEmailAndPassword(em, pw)
+                                .addOnSuccessListener(r -> updateAuthStatus())
+                                .addOnFailureListener(e -> Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                    }
+                }).show();
     }
 
-    private void loginUser() {
-        String email = etAuthEmail.getText().toString().trim();
-        String pass = etAuthPassword.getText().toString().trim();
-        if (email.isEmpty() || pass.isEmpty()) {
-            Toast.makeText(this, "ഇമെയിലും പാസ്‌വേഡും നൽകുക", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mAuth.signInWithEmailAndPassword(email, pass)
-                .addOnSuccessListener(res -> updateAuthUI(res.getUser()))
-                .addOnFailureListener(e -> Toast.makeText(this, "ലോഗിൻ പരാജയം: " + e.getMessage(), Toast.LENGTH_LONG).show());
-    }
-
-    private void uploadImageAndSaveListing() {
+    private void postNewListing() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
-            Toast.makeText(this, "വിൽക്കുന്നതിനായി ആദ്യം ലോഗിൻ ചെയ്യുക!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ദയവായി ലോഗിൻ ചെയ്യുക!", Toast.LENGTH_SHORT).show();
+            showAuthDialog();
             return;
         }
 
-        String title = etTitle.getText().toString().trim();
-        String price = etPrice.getText().toString().trim();
-        String weight = etWeight.getText().toString().trim();
-        String phone = etPhone.getText().toString().trim();
-        String location = etLocation.getText().toString().trim();
-        String category = spinnerCategory.getSelectedItem().toString();
+        String title = sellEtTitle.getText().toString().trim();
+        String price = sellEtPrice.getText().toString().trim();
+        String loc = sellEtLocation.getText().toString().trim();
+        String phone = sellEtPhone.getText().toString().trim();
+        String cat = sellSpinnerCategory.getSelectedItem().toString();
 
-        if (title.isEmpty() || price.isEmpty() || phone.isEmpty() || location.isEmpty()) {
-            Toast.makeText(this, "എല്ലാ പ്രധാന വിവരങ്ങളും നൽകുക", Toast.LENGTH_SHORT).show();
+        if (title.isEmpty() || price.isEmpty() || loc.isEmpty() || phone.isEmpty()) {
+            Toast.makeText(this, "വിവരങ്ങൾ പൂർണ്ണമായി നൽകുക", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        btnListNow.setEnabled(false);
+        sellBtnSubmit.setEnabled(false);
+        sellBtnSubmit.setText("അപ്‌ലോഡ് ചെയ്യുന്നു...");
 
         if (selectedImageUri != null) {
-            StorageReference ref = storage.getReference().child("livestock_images/" + UUID.randomUUID().toString());
+            StorageReference ref = storage.getReference().child("livestock/" + UUID.randomUUID().toString());
             ref.putFile(selectedImageUri)
-                    .addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                        saveToFirestore(category, title, price, weight, phone, location, uri.toString(), user);
+                    .addOnSuccessListener(task -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                        saveData(cat, title, price, loc, phone, uri.toString());
                     }))
                     .addOnFailureListener(e -> {
-                        btnListNow.setEnabled(true);
-                        Toast.makeText(this, "ഫോട്ടോ അപ്‌ലോഡ് പരാജയം: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        sellBtnSubmit.setEnabled(true);
+                        sellBtnSubmit.setText("ലിസ്റ്റ് ചെയ്യുക (POST NOW)");
+                        Toast.makeText(this, "ഫോട്ടോ അപ്‌ലോഡ് പരാജയം: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         } else {
-            saveToFirestore(category, title, price, weight, phone, location, "", user);
+            saveData(cat, title, price, loc, phone, "");
         }
     }
 
-    private void saveToFirestore(String category, String title, String price, String weight, String phone, String location, String imageUrl, FirebaseUser user) {
-        Map<String, Object> item = new HashMap<>();
-        item.put("userId", user.getUid());
-        item.put("userEmail", user.getEmail());
-        item.put("category", category);
-        item.put("title", title);
-        item.put("price", price);
-        item.put("weight", weight);
-        item.put("phone", phone);
-        item.put("location", location);
-        item.put("imageUrl", imageUrl);
-        item.put("timestamp", System.currentTimeMillis());
+    private void saveData(String cat, String title, String price, String loc, String phone, String imgUrl) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("category", cat);
+        map.put("title", title);
+        map.put("price", price);
+        map.put("location", loc);
+        map.put("phone", phone);
+        map.put("imageUrl", imgUrl);
+        map.put("timestamp", System.currentTimeMillis());
 
-        db.collection("qurban_listings")
-                .add(item)
-                .addOnSuccessListener(doc -> {
-                    btnListNow.setEnabled(true);
-                    selectedImageUri = null;
-                    ivPreview.setImageURI(null);
-                    etTitle.setText("");
-                    etPrice.setText("");
-                    etWeight.setText("");
-                    etPhone.setText("");
-                    etLocation.setText("");
-                    Toast.makeText(this, "വിജയകരമായി ചേർത്തു!", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    btnListNow.setEnabled(true);
-                    Toast.makeText(this, "എറർ: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+        db.collection("qurban_listings").add(map).addOnSuccessListener(doc -> {
+            sellBtnSubmit.setEnabled(true);
+            sellBtnSubmit.setText("ലിസ്റ്റ് ചെയ്യുക (POST NOW)");
+            sellEtTitle.setText("");
+            sellEtPrice.setText("");
+            sellEtLocation.setText("");
+            sellEtPhone.setText("");
+            sellIvPreview.setImageURI(null);
+            selectedImageUri = null;
+
+            Toast.makeText(this, "ലിസ്റ്റിംഗ് വിജയകരമായി ചേർത്തു!", Toast.LENGTH_SHORT).show();
+            // Switch back to Buy Tab to see the item
+            tabBuy.performClick();
+        }).addOnFailureListener(e -> {
+            sellBtnSubmit.setEnabled(true);
+            sellBtnSubmit.setText("ലിസ്റ്റ് ചെയ്യുക (POST NOW)");
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void listenForListings() {
-        db.collection("qurban_listings")
-                .addSnapshotListener((snapshots, e) -> {
-                    if (e != null || snapshots == null) return;
-                    allListings.clear();
-                    allListings.addAll(snapshots.getDocuments());
-                    renderFilteredListings();
-                });
+        db.collection("qurban_listings").addSnapshotListener((snaps, err) -> {
+            if (err != null || snaps == null) return;
+            allListings.clear();
+            allListings.addAll(snaps.getDocuments());
+            renderGrid();
+        });
     }
 
-    private void renderFilteredListings() {
-        containerListings.removeAllViews();
+    private void renderGrid() {
+        layoutGridProducts.removeAllViews();
         String query = etSearch.getText().toString().trim().toLowerCase();
         LayoutInflater inflater = LayoutInflater.from(this);
 
+        List<DocumentSnapshot> filtered = new ArrayList<>();
         for (DocumentSnapshot doc : allListings) {
             String title = doc.getString("title");
             String cat = doc.getString("category");
-            String price = doc.getString("price");
             String loc = doc.getString("location");
-            String phone = doc.getString("phone");
-            String imgUrl = doc.getString("imageUrl");
 
             if (title == null) continue;
 
-            // ഫിൽട്ടർ പരിശോധന
-            if (!currentCategoryFilter.equals("All") && !cat.equals(currentCategoryFilter)) {
+            if (!currentCategoryFilter.equals("All") && !currentCategoryFilter.equalsIgnoreCase(cat)) {
                 continue;
             }
 
-            // സെർച്ച് പരിശോധന
             if (!query.isEmpty() && !title.toLowerCase().contains(query) && (loc != null && !loc.toLowerCase().contains(query))) {
                 continue;
             }
+            filtered.add(doc);
+        }
 
-            View cardView = inflater.inflate(R.layout.item_product_card, containerListings, false);
-
-            TextView tvTitle = cardView.findViewById(R.id.tvCardTitle);
-            TextView tvCategory = cardView.findViewById(R.id.tvCardCategory);
-            TextView tvPrice = cardView.findViewById(R.id.tvCardPrice);
-            TextView tvLocation = cardView.findViewById(R.id.tvCardLocation);
-            TextView tvPhone = cardView.findViewById(R.id.tvCardPhone);
-            ImageView ivImg = cardView.findViewById(R.id.ivProductImage);
-
-            tvTitle.setText(title);
-            tvCategory.setText("വിഭാഗം: " + cat);
-            tvPrice.setText("₹" + price);
-            tvLocation.setText("സ്ഥലം: " + loc);
-            tvPhone.setText("📞 വിളിക്കുക: " + phone);
-
-            if (imgUrl != null && !imgUrl.isEmpty()) {
-                Glide.with(this).load(imgUrl).into(ivImg);
+        LinearLayout currentRow = null;
+        for (int i = 0; i < filtered.size(); i++) {
+            if (i % 2 == 0) {
+                currentRow = new LinearLayout(this);
+                currentRow.setOrientation(LinearLayout.HORIZONTAL);
+                currentRow.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                layoutGridProducts.addView(currentRow);
             }
 
-            containerListings.addView(cardView);
+            DocumentSnapshot doc = filtered.get(i);
+            View card = inflater.inflate(R.layout.item_product_grid, currentRow, false);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+            card.setLayoutParams(lp);
+
+            TextView tvTitle = card.findViewById(R.id.tvCardTitle);
+            TextView tvPrice = card.findViewById(R.id.tvCardPrice);
+            TextView tvLoc = card.findViewById(R.id.tvCardLocation);
+            ImageView iv = card.findViewById(R.id.ivProductImage);
+            Button btnCall = card.findViewById(R.id.btnCall);
+
+            tvTitle.setText(doc.getString("title"));
+            tvPrice.setText("₹" + doc.getString("price"));
+            tvLoc.setText("📍 " + doc.getString("location"));
+
+            String img = doc.getString("imageUrl");
+            if (img != null && !img.isEmpty()) {
+                Glide.with(this).load(img).into(iv);
+            }
+
+            final String phone = doc.getString("phone");
+            btnCall.setOnClickListener(v -> {
+                if (phone != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                    startActivity(intent);
+                }
+            });
+
+            if (currentRow != null) {
+                currentRow.addView(card);
+            }
         }
     }
 }
