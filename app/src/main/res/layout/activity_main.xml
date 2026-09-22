@@ -475,5 +475,30 @@
                             android:backgroundTint="#2874F0"
                             android:text="Add Photo"
                             android:textColor="#FFFFFF" />
+                        <ImageView
+                            android:id="@+id/sellIvPreview"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:layout_marginStart="16dp"
+                            android:background="#F1F2F4"
+                            android:scaleType="centerCrop" />
+                    </LinearLayout>
 
-                        <ImageVi
+                    <Button
+                        android:id="@+id/sellBtnSubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:backgroundTint="#FB641B"
+                        android:text="POST NOW"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
+
+                
