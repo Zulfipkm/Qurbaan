@@ -1,11 +1,11 @@
 package com.qurban.livestock;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Uri imageUri = result.getData().getData();
                     try {
                         InputStream imageStream = getContentResolver().openInputStream(imageUri);
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         base64ImageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
                     } catch (Exception e) {
-                        Toast.makeText(this, "ഇമേജ് പ്രോസസ്സ് ചെയ്യുന്നതിൽ പിഴവ്: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Image processing error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -124,20 +125,20 @@ public class MainActivity extends AppCompatActivity {
         tabBuy.setOnClickListener(v -> {
             viewBuy.setVisibility(View.VISIBLE);
             viewSell.setVisibility(View.GONE);
-            tvTabBuyText.setTextColor(0xFF1B5E20);
-            tvTabSellText.setTextColor(0xFF757575);
+            tvTabBuyText.setTextColor(Color.parseColor("#2874F0"));
+            tvTabSellText.setTextColor(Color.parseColor("#717478"));
         });
 
         tabSell.setOnClickListener(v -> {
             if (mAuth.getCurrentUser() == null) {
-                Toast.makeText(this, "വിൽക്കുന്നതിനായി ആദ്യം ലോഗിൻ ചെയ്യുക!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please Login to Sell!", Toast.LENGTH_SHORT).show();
                 showAuthDialog();
                 return;
             }
             viewBuy.setVisibility(View.GONE);
             viewSell.setVisibility(View.VISIBLE);
-            tvTabSellText.setTextColor(0xFF1B5E20);
-            tvTabBuyText.setTextColor(0xFF757575);
+            tvTabSellText.setTextColor(Color.parseColor("#2874F0"));
+            tvTabBuyText.setTextColor(Color.parseColor("#717478"));
         });
 
         tvAuthStatusTop.setOnClickListener(v -> showAuthDialog());
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setCategoryFilter(String category) {
         currentCategoryFilter = category;
-        tvCategoryLabel.setText(category.equals("All") ? "ലഭ്യമായവ (All)" : category + " Listings");
+        tvCategoryLabel.setText(category.equals("All") ? "Suggested For You" : category + " Deals");
         renderGrid();
     }
 
@@ -201,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(etEmail);
         layout.addView(etPass);
 
-        builder.setTitle("Login / Register").setView(layout)
+        builder.setTitle("Flipkart-Qurban Login").setView(layout)
                 .setPositiveButton("Login", (dialog, which) -> {
                     String em = etEmail.getText().toString().trim();
                     String pw = etPass.getText().toString().trim();
@@ -225,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
     private void postNewListing() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
-            Toast.makeText(this, "ദയവായി ലോഗിൻ ചെയ്യുക!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please Login First!", Toast.LENGTH_SHORT).show();
             showAuthDialog();
             return;
         }
@@ -237,12 +238,12 @@ public class MainActivity extends AppCompatActivity {
         String cat = sellSpinnerCategory.getSelectedItem().toString();
 
         if (title.isEmpty() || price.isEmpty() || loc.isEmpty() || phone.isEmpty()) {
-            Toast.makeText(this, "വിവരങ്ങൾ പൂർണ്ണമായി നൽകുക", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
         sellBtnSubmit.setEnabled(false);
-        sellBtnSubmit.setText("അപ്‌ലോഡ് ചെയ്യുന്നു...");
+        sellBtnSubmit.setText("Uploading...");
 
         Map<String, Object> map = new HashMap<>();
         map.put("category", cat);
@@ -255,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
 
         db.collection("qurban_listings").add(map).addOnSuccessListener(doc -> {
             sellBtnSubmit.setEnabled(true);
-            sellBtnSubmit.setText("ലിസ്റ്റ് ചെയ്യുക (POST NOW)");
+            sellBtnSubmit.setText("POST NOW");
             sellEtTitle.setText("");
             sellEtPrice.setText("");
             sellEtLocation.setText("");
@@ -263,11 +264,11 @@ public class MainActivity extends AppCompatActivity {
             sellIvPreview.setImageURI(null);
             base64ImageString = "";
 
-            Toast.makeText(this, "ലിസ്റ്റിംഗ് വിജയകരമായി ചേർത്തു!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Ad Published Successfully!", Toast.LENGTH_SHORT).show();
             tabBuy.performClick();
         }).addOnFailureListener(e -> {
             sellBtnSubmit.setEnabled(true);
-            sellBtnSubmit.setText("ലിസ്റ്റ് ചെയ്യുക (POST NOW)");
+            sellBtnSubmit.setText("POST NOW");
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
@@ -303,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
             filtered.add(doc);
         }
 
+        // Exact Flipkart 2-Column Grid
         LinearLayout currentRow = null;
         for (int i = 0; i < filtered.size(); i++) {
             if (i % 2 == 0) {
@@ -311,27 +313,27 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                rowParams.setMargins(0, 0, 0, 16);
+                rowParams.setMargins(0, 0, 0, 8);
                 currentRow.setLayoutParams(rowParams);
                 layoutGridProducts.addView(currentRow);
             }
 
             DocumentSnapshot doc = filtered.get(i);
-            View card = createProductCard(doc);
+            View card = createFlipkartCard(doc);
             if (currentRow != null) {
                 currentRow.addView(card);
             }
         }
     }
 
-    private View createProductCard(DocumentSnapshot doc) {
+    private View createFlipkartCard(DocumentSnapshot doc) {
         CardView cardView = new CardView(this);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-        cardParams.setMargins(8, 8, 8, 8);
+        cardParams.setMargins(4, 4, 4, 4);
         cardView.setLayoutParams(cardParams);
-        cardView.setRadius(12f);
-        cardView.setCardElevation(4f);
+        cardView.setRadius(4f);
+        cardView.setCardElevation(2f);
         cardView.setCardBackgroundColor(Color.WHITE);
 
         LinearLayout contentLayout = new LinearLayout(this);
@@ -339,12 +341,13 @@ public class MainActivity extends AppCompatActivity {
         contentLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+        // Product Image
         ImageView imageView = new ImageView(this);
         LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 320);
+                LinearLayout.LayoutParams.MATCH_PARENT, 260);
         imageView.setLayoutParams(imgParams);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        imageView.setBackgroundColor(Color.parseColor("#F9F9F9"));
 
         String base64 = doc.getString("imageBase64");
         if (base64 != null && !base64.isEmpty()) {
@@ -360,54 +363,133 @@ public class MainActivity extends AppCompatActivity {
         }
         contentLayout.addView(imageView);
 
+        // Details Container
         LinearLayout textContainer = new LinearLayout(this);
         textContainer.setOrientation(LinearLayout.VERTICAL);
-        textContainer.setPadding(16, 12, 16, 16);
+        textContainer.setPadding(10, 8, 10, 10);
 
+        // Title
         TextView tvTitle = new TextView(this);
         tvTitle.setText(doc.getString("title"));
         tvTitle.setTextColor(Color.parseColor("#212121"));
-        tvTitle.setTextSize(14f);
-        tvTitle.setTypeface(null, Typeface.BOLD);
+        tvTitle.setTextSize(13f);
         tvTitle.setMaxLines(1);
         tvTitle.setEllipsize(TextUtils.TruncateAt.END);
         textContainer.addView(tvTitle);
 
+        // Rating Badge (Flipkart Style Green 4.3 ★)
+        LinearLayout ratingRow = new LinearLayout(this);
+        ratingRow.setOrientation(LinearLayout.HORIZONTAL);
+        ratingRow.setGravity(Gravity.CENTER_VERTICAL);
+        ratingRow.setPadding(0, 3, 0, 3);
+
+        TextView tvRating = new TextView(this);
+        tvRating.setText(" 4.3 ★ ");
+        tvRating.setTextColor(Color.WHITE);
+        tvRating.setTextSize(10f);
+        tvRating.setTypeface(null, Typeface.BOLD);
+        tvRating.setBackgroundColor(Color.parseColor("#388E3C")); // Flipkart Rating Green
+        ratingRow.addView(tvRating);
+
+        TextView tvAssured = new TextView(this);
+        tvAssured.setText("  ✔ Assured");
+        tvAssured.setTextColor(Color.parseColor("#2874F0"));
+        tvAssured.setTextSize(10f);
+        tvAssured.setTypeface(null, Typeface.BOLD);
+        ratingRow.addView(tvAssured);
+
+        textContainer.addView(ratingRow);
+
+        // Flipkart Price Row (₹Price + Strikethrough + Discount)
+        String rawPrice = doc.getString("price");
+        int priceVal = 0;
+        try { priceVal = Integer.parseInt(rawPrice.replaceAll("[^0-9]", "")); } catch (Exception ignored) {}
+        int originalPrice = priceVal > 0 ? (int)(priceVal * 1.25) : 0;
+
+        LinearLayout priceRow = new LinearLayout(this);
+        priceRow.setOrientation(LinearLayout.HORIZONTAL);
+        priceRow.setGravity(Gravity.CENTER_VERTICAL);
+        priceRow.setPadding(0, 2, 0, 2);
+
         TextView tvPrice = new TextView(this);
-        tvPrice.setText("₹" + doc.getString("price"));
-        tvPrice.setTextColor(Color.parseColor("#2E7D32"));
-        tvPrice.setTextSize(16f);
+        tvPrice.setText("₹" + rawPrice);
+        tvPrice.setTextColor(Color.parseColor("#212121"));
+        tvPrice.setTextSize(14f);
         tvPrice.setTypeface(null, Typeface.BOLD);
-        tvPrice.setPadding(0, 4, 0, 0);
-        textContainer.addView(tvPrice);
+        priceRow.addView(tvPrice);
 
-        TextView tvLoc = new TextView(this);
-        tvLoc.setText("📍 " + doc.getString("location"));
-        tvLoc.setTextColor(Color.parseColor("#757575"));
-        tvLoc.setTextSize(11f);
-        tvLoc.setPadding(0, 4, 0, 8);
-        textContainer.addView(tvLoc);
+        if (originalPrice > 0) {
+            TextView tvOldPrice = new TextView(this);
+            tvOldPrice.setText(" ₹" + originalPrice);
+            tvOldPrice.setTextColor(Color.parseColor("#878787"));
+            tvOldPrice.setTextSize(11f);
+            tvOldPrice.setPaintFlags(tvOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            priceRow.addView(tvOldPrice);
 
-        Button btnCall = new Button(this);
-        btnCall.setText("Call Seller");
-        btnCall.setTextColor(Color.WHITE);
-        btnCall.setTextSize(12f);
-        btnCall.setBackgroundColor(Color.parseColor("#FF9F00"));
-        btnCall.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 95));
+            TextView tvDiscount = new TextView(this);
+            tvDiscount.setText(" 20% off");
+            tvDiscount.setTextColor(Color.parseColor("#388E3C"));
+            tvDiscount.setTextSize(11f);
+            tvDiscount.setTypeface(null, Typeface.BOLD);
+            priceRow.addView(tvDiscount);
+        }
+        textContainer.addView(priceRow);
+
+        // Free Delivery tag
+        TextView tvFreeDelivery = new TextView(this);
+        tvFreeDelivery.setText("Free Delivery • " + doc.getString("location"));
+        tvFreeDelivery.setTextColor(Color.parseColor("#388E3C"));
+        tvFreeDelivery.setTextSize(10f);
+        tvFreeDelivery.setPadding(0, 1, 0, 6);
+        textContainer.addView(tvFreeDelivery);
 
         final String phone = doc.getString("phone");
-        btnCall.setOnClickListener(v -> {
+        final String title = doc.getString("title");
+
+        // Action Buttons Row (WhatsApp + Buy Now)
+        LinearLayout btnRow = new LinearLayout(this);
+        btnRow.setOrientation(LinearLayout.HORIZONTAL);
+
+        Button btnChat = new Button(this);
+        btnChat.setText("WhatsApp");
+        btnChat.setTextColor(Color.WHITE);
+        btnChat.setTextSize(10f);
+        btnChat.setBackgroundColor(Color.parseColor("#25D366"));
+        LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(0, 75, 1.0f);
+        p1.setMargins(0, 0, 2, 0);
+        btnChat.setLayoutParams(p1);
+        btnChat.setOnClickListener(v -> {
+            if (phone != null && !phone.isEmpty()) {
+                String cleanPhone = phone.replaceAll("[^0-9]", "");
+                if (cleanPhone.length() == 10) cleanPhone = "91" + cleanPhone;
+                String msg = "Hi, I am interested in your listing: " + title + " (Qurban App)";
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + cleanPhone + "&text=" + Uri.encode(msg)));
+                startActivity(i);
+            }
+        });
+        btnRow.addView(btnChat);
+
+        Button btnBuy = new Button(this);
+        btnBuy.setText("Buy Now");btnBuy.setTextColor(Color.WHITE);
+        btnBuy.setTextSize(10f);
+        btnBuy.setBackgroundColor(Color.parseColor("#FB641B")); // Flipkart Buy Now Orange
+        LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0, 75, 1.0f);
+        p2.setMargins(2, 0, 0, 0);
+        btnBuy.setLayoutParams(p2);
+        btnBuy.setOnClickListener(v -> {
             if (phone != null && !phone.isEmpty()) {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
                 startActivity(intent);
             }
         });
-        textContainer.addView(btnCall);
+        btnRow.addView(btnBuy);
+
+        textContainer.addView(btnRow);
 
         contentLayout.addView(textContainer);
         cardView.addView(contentLayout);
         return cardView;
-        }
+    }
 }
-    
+        
+  
